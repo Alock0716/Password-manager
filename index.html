@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Password Vault PWA</title>
+
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#111827" />
+
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="bar">
+    <div class="brand">Vault</div>
+    <div class="actions">
+      <button id="btnSync" class="btn">Sync</button>
+      <button id="btnLock" class="btn secondary">Lock</button>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- LOGIN -->
+    <section id="loginCard" class="card">
+      <h2>Unlock</h2>
+      <p class="muted">Uses your Python vault as the source of truth, caches an encrypted snapshot on this device.</p>
+
+      <label class="lbl">Server Base URL</label>
+      <input id="serverUrl" class="in" placeholder="https://192.168.1.20:5443" />
+
+      <label class="lbl">Master Password</label>
+      <input id="masterPw" class="in" type="password" placeholder="Master password" />
+
+      <button id="btnLogin" class="btn primary">Unlock</button>
+
+      <div id="loginMsg" class="msg"></div>
+      <div class="muted small">
+        Tip: after your first sync, this can open offline using the cached snapshot.
+      </div>
+    </section>
+
+    <!-- VAULT -->
+    <section id="vaultCard" class="card hidden">
+      <div class="row">
+        <h2>Your Entries</h2>
+        <button id="btnAdd" class="btn primary">Add</button>
+      </div>
+
+      <div class="row">
+        <input id="q" class="in" placeholder="Search service, username, tags..." />
+        <div class="pill" id="statusPill">offline-ready</div>
+      </div>
+
+      <div class="tableWrap">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Service</th>
+              <th>Username</th>
+              <th>Email</th>
+              <th>Tags</th>
+              <th class="right">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+
+      <div class="muted small" id="meta"></div>
+    </section>
+
+    <!-- EDIT MODAL -->
+    <div id="modal" class="modal hidden">
+      <div class="modalCard">
+        <div class="row">
+          <h3 id="modalTitle">Entry</h3>
+          <button id="btnClose" class="btn secondary">Close</button>
+        </div>
+
+        <div class="grid">
+          <div>
+            <label class="lbl">Service *</label>
+            <input id="fService" class="in" />
+          </div>
+          <div>
+            <label class="lbl">Username *</label>
+            <input id="fUsername" class="in" />
+          </div>
+
+          <div>
+            <label class="lbl">Email</label>
+            <input id="fEmail" class="in" />
+          </div>
+          <div>
+            <label class="lbl">Phone</label>
+            <input id="fPhone" class="in" />
+          </div>
+
+          <div>
+            <label class="lbl">Tags (comma separated)</label>
+            <input id="fTags" class="in" placeholder="school, personal, work" />
+          </div>
+          <div>
+            <label class="lbl">Password</label>
+            <input id="fPassword" class="in" />
+          </div>
+
+          <div>
+            <label class="lbl">Custom1</label>
+            <input id="fCustom1" class="in" />
+          </div>
+          <div>
+            <label class="lbl">Custom2</label>
+            <input id="fCustom2" class="in" />
+          </div>
+
+          <div style="grid-column: 1 / -1;">
+            <label class="lbl">Note</label>
+            <textarea id="fNote" class="in" rows="4"></textarea>
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="btnSave" class="btn primary">Save</button>
+          <button id="btnDelete" class="btn danger">Delete</button>
+          <div id="modalMsg" class="msg"></div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // register SW
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js");
+    }
+  </script>
+</body>
+</html>
